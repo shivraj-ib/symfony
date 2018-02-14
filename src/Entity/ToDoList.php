@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Entity;
-
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -17,11 +17,13 @@ class ToDoList
     private $id;
 
     /**
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=250)
      */
     private $title;
     
     /**
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=500)
      */
     private $description;
