@@ -1,0 +1,32 @@
+{# templates/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}My CURD Application{% endblock %}
+{% block body %}
+    <div class="container">
+        <h2>My Tasks</h2>
+        <a class="btn btn-primary" href="{{url('add_new_task')}}">Add New Task</a>
+        <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Task ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Due Date</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for task in tasks %}
+                <tr>
+                    <td>{{task.id}}</td>
+                    <td>{{task.title}}</td>
+                    <td>{{task.description}}</td>
+                    <td>{{task.lastDate|date("m-d-Y")}}</td>
+                </tr>
+            {% else %}
+                No tasks have been found.
+            {% endfor %}
+            </tbody>
+        </table>     
+    </div>
+{% endblock %}

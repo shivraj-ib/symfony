@@ -1,0 +1,13 @@
+{# templates/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}My CURD Application{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
