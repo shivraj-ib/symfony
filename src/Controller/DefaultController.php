@@ -64,5 +64,64 @@ class DefaultController extends Controller
                     'form' => $form->createView(),
         ));
     }
+    
+    /**
+     * @Route("/delete/{id}",name="delete_task", requirements={"id"="\d+"})
+     */
+    public function deleteTask($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $task = $em->getRepository(ToDoList::class)->find($id);
 
+        if (!$task) {
+            throw $this->createNotFoundException(
+                    'No task found for id =' . $id
+            );
+        }
+        
+        $em->remove($task);
+        $em->flush();
+        return $this->redirectToRoute('home_url');
+    }
+    
+    /**
+     * @Route("/edit/{id}",name="edit_task", requirements={"id"="\d+"})
+     */
+    public function editTask($id,Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $task = $em->getRepository(ToDoList::class)->find($id);
+
+        if (!$task) {
+            throw $this->createNotFoundException(
+                    'No task found for id =' . $id
+            );
+        }
+        
+        $form = $this->createFormBuilder($task)
+                ->add('title', TextType::class)
+                ->add('description', TextareaType::class)
+                ->add('lastDate', DateType::class)
+                ->add('save', SubmitType::class, array('label' => 'Edit Task'))
+                ->getForm();
+        
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // $form->getData() holds the submitted values
+            // but, the original `$task` variable has also been updated
+            $task = $form->getData();
+
+            // ... perform some action, such as saving the task to the database
+            // for example, if Task is a Doctrine entity, save it!
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($task);
+            $em->flush();
+
+            return $this->redirectToRoute('home_url');
+        }
+
+        return $this->render('new.html.twig', array(
+                    'form' => $form->createView(),
+        ));
+    }
 }

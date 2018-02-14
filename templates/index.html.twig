@@ -5,7 +5,7 @@
 {% block body %}
     <div class="container">
         <h2>My Tasks</h2>
-        <a class="btn btn-primary" href="{{url('add_new_task')}}">Add New Task</a>
+        <a class="btn btn-primary" href="{{path('add_new_task')}}">Add New Task</a>
         <table class="table table-bordered">
             <thead>
               <tr>
@@ -13,6 +13,7 @@
                 <th>Name</th>
                 <th>Description</th>
                 <th>Due Date</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -22,6 +23,10 @@
                     <td>{{task.title}}</td>
                     <td>{{task.description}}</td>
                     <td>{{task.lastDate|date("m-d-Y")}}</td>
+                    <td>                        
+                        <a href="{{path('edit_task',{'id' : task.id})}}" class="btn btn-primary">Edit</a>
+                        <a href="{{path('delete_task',{'id' : task.id})}}" class="btn btn-danger">Delete</a>
+                    </td>
                 </tr>
             {% else %}
                 No tasks have been found.
