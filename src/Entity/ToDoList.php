@@ -17,18 +17,19 @@ class ToDoList
     private $id;
 
     /**
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Please enter title")
      * @ORM\Column(type="string", length=250)
      */
     private $title;
     
     /**
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Please enter description")     
      * @ORM\Column(type="string", length=500)
      */
     private $description;
     
     /**
+     * @Assert\GreaterThan("today",message="Please select a future date.")
      * @ORM\Column(type="date")
      */
     private $lastDate;
@@ -59,6 +60,14 @@ class ToDoList
 
     public function setLastDate(\DateTime $last_date) {
         $this->lastDate = $last_date;
-    } 
+    }
+    
+    /**
+     * @Assert\IsTrue(message="The description field can not be same as title")
+     */
+    public function isDescriptionLegal()
+    {
+       return $this->title !== $this->description;
+    }
 
 }

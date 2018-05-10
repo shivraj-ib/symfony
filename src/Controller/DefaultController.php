@@ -56,7 +56,12 @@ class DefaultController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($task);
             $em->flush();
-
+            
+            $this->addFlash(
+                'notice',
+                'New task added!'
+            );
+            
             return $this->redirectToRoute('home_url');
         }
 
@@ -74,13 +79,21 @@ class DefaultController extends Controller
         $task = $em->getRepository(ToDoList::class)->find($id);
 
         if (!$task) {
-            throw $this->createNotFoundException(
-                    'No task found for id =' . $id
+            $this->addFlash(
+                'error',
+                'No task found for id =' . $id
             );
+            return $this->redirectToRoute('home_url');
         }
         
         $em->remove($task);
         $em->flush();
+        
+        $this->addFlash(
+                'notice',
+                'Task removed'
+            );
+        
         return $this->redirectToRoute('home_url');
     }
     
@@ -92,9 +105,11 @@ class DefaultController extends Controller
         $task = $em->getRepository(ToDoList::class)->find($id);
 
         if (!$task) {
-            throw $this->createNotFoundException(
-                    'No task found for id =' . $id
+            $this->addFlash(
+                'error',
+                'No task found for id =' . $id
             );
+            return $this->redirectToRoute('home_url');
         }
         
         $form = $this->createFormBuilder($task)
@@ -116,7 +131,12 @@ class DefaultController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($task);
             $em->flush();
-
+            
+            $this->addFlash(
+                'notice',
+                'Task edited'
+            );
+            
             return $this->redirectToRoute('home_url');
         }
 
