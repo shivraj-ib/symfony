@@ -17,10 +17,12 @@ use Psr\Log\LoggerInterface;
 class MessageGenerator
 {
     private $logger;
+    private $msgPrefix;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, $msgPrefix)
     {
         $this->logger = $logger;
+        $this->msgPrefix = $msgPrefix;
     }
     
     public function getHappyMessage()
@@ -33,8 +35,8 @@ class MessageGenerator
 
         $index = array_rand($messages);
         
-        $this->logger->info($messages[$index]);
+        $this->logger->info( $this->msgPrefix.": ".$messages[$index]);
 
-        return $messages[$index];
+        return $this->msgPrefix.": ".$messages[$index];
     }
 }
