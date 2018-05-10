@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use App\Service\MessageGenerator;
 
 class DefaultController extends Controller
 {
@@ -20,8 +21,10 @@ class DefaultController extends Controller
      * 
      * @Route("/",name="home_url")
      */
-    public function index()
+    public function index(MessageGenerator $messageGenerator)
     {
+        $message = $messageGenerator->getHappyMessage();
+        $this->addFlash('message', $message);
         $tasks = $this->getDoctrine()
         ->getRepository(ToDoList::class)
         ->findAll();
