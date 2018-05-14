@@ -17,6 +17,7 @@ use App\Service\MessageGenerator;
 use App\Event\TaskCreatedEvent;
 use App\EventListner\TaskCreatedEventListner;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use App\EventSubscriber\TaskSubscriber;
 use Psr\Log\LoggerInterface;
 
 class DefaultController extends Controller
@@ -39,7 +40,7 @@ class DefaultController extends Controller
      * 
      * @Route("/new",name="add_new_task")
      */
-    public function addNewItem(Request $request,TaskCreatedEventListner $listener) 
+    public function addNewItem(Request $request,TaskCreatedEventListner $listener,TaskSubscriber $subscriber) 
     {
 
         $task = new ToDoList();
@@ -70,7 +71,7 @@ class DefaultController extends Controller
             //event dispatcher
             $dispatcher = new EventDispatcher();
             //bind even listner with event dispatcher
-            $dispatcher->addListener($event::NAME, array($listener, 'onTaskCreated'));
+            $dispatcher->addSubscriber($subscriber);
             //dispatch event
             $dispatcher->dispatch($event::NAME, $event);
             
