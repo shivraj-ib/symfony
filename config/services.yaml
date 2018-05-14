@@ -30,3 +30,8 @@ services:
     App\Service\MessageGenerator:
         arguments:
             $msgPrefix: 'Message for you'
+            
+    # Custom event listner register as service
+    App\EventListener\TaskCreatedEventListner:
+        tags:
+            - { name: task.event_listener, event: task.created }

@@ -14,6 +14,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Service\MessageGenerator;
+use App\Event\TaskCreatedEvent;
+use App\EventListner\TaskCreatedEventListner;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Psr\Log\LoggerInterface;
 
 class DefaultController extends Controller
 {
@@ -35,7 +39,7 @@ class DefaultController extends Controller
      * 
      * @Route("/new",name="add_new_task")
      */
-    public function addNewItem(Request $request) 
+    public function addNewItem(Request $request,TaskCreatedEventListner $listener) 
     {
 
         $task = new ToDoList();
@@ -53,12 +57,23 @@ class DefaultController extends Controller
             // $form->getData() holds the submitted values
             // but, the original `$task` variable has also been updated
             $task = $form->getData();
-
+            
             // ... perform some action, such as saving the task to the database
             // for example, if Task is a Doctrine entity, save it!
             $em = $this->getDoctrine()->getManager();
             $em->persist($task);
             $em->flush();
+            
+            /**Event handling **/
+            //create new event object
+            $event = new TaskCreatedEvent($task);
+            //event dispatcher
+            $dispatcher = new EventDispatcher();
+            //bind even listner with event dispatcher
+            $dispatcher->addListener($event::NAME, array($listener, 'onTaskCreated'));
+            //dispatch event
+            $dispatcher->dispatch($event::NAME, $event);
+            
             
             $this->addFlash(
                 'notice',
