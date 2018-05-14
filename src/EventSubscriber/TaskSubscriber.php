@@ -25,16 +25,25 @@ class TaskSubscriber implements EventSubscriberInterface
         // return the subscribed events, their methods and priorities
         return array(
            TaskCreatedEvent::NAME => array(
-               array('logTask', 0)
+               array('logTaskBefore', 20),
+               array('logTaskAfter',10)
            )
         );
     }
 
-    public function logTask(TaskCreatedEvent $event)
+    public function logTaskBefore(TaskCreatedEvent $event)
     {
         $task = $event->getTask();
         //play with $task object
         //PALY WITH $TASK OBJECT
-         $this->logger->info('NEW TASK ADDED : '. $task->getTitle());
-    }   
+         $this->logger->info('I was added first : '. $task->getTitle());
+    }
+    
+    public function logTaskAfter(TaskCreatedEvent $event)
+    {
+        $task = $event->getTask();
+        //play with $task object
+        //PALY WITH $TASK OBJECT
+         $this->logger->info('I was added later : '. $task->getTitle());
+    }
 }
