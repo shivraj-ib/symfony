@@ -26,14 +26,20 @@ class DefaultController extends Controller
      * 
      * @Route("/",name="home_url")
      */
-    public function index(MessageGenerator $messageGenerator)
+    public function index(Request $request,MessageGenerator $messageGenerator)
     {
         $message = $messageGenerator->getHappyMessage();
         $this->addFlash('message', $message);
         $tasks = $this->getDoctrine()
         ->getRepository(ToDoList::class)
         ->findAll();
-        return $this->render('index.html.twig',array('tasks' => $tasks));
+        $response = $this->render('index.html.twig',array('tasks' => $tasks));
+        
+        $response->setEtag(md5(serialize($tasks)));
+        $response->setPublic(); // make sure the response is public/cacheable
+        $response->isNotModified($request);
+        
+        return $response;
     }
     
     /**
