@@ -35,9 +35,9 @@ class DefaultController extends Controller
         ->findAll();
         $response = $this->render('index.html.twig',array('tasks' => $tasks));
         
-        $response->setEtag(md5(serialize($tasks)));
-        $response->setPublic(); // make sure the response is public/cacheable
-        $response->isNotModified($request);
+        //$response->setEtag(md5(serialize($tasks)));
+        //$response->setPublic(); // make sure the response is public/cacheable
+        //$response->isNotModified($request);
         
         return $response;
     }
